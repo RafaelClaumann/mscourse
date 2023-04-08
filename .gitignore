@@ -8,4 +8,9 @@ hr-payroll/mvnw
 hr-payroll/mvnw.cmd
 hr-payroll/.idea
 
+hr-eureka-server/.mvn
+hr-eureka-server/mvnw
+hr-eureka-server/mvnw.cmd
+hr-eureka-server/.idea
+
 .idea

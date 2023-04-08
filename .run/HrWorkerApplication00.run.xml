@@ -1,8 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="HrWorkerApplication:8002" type="Application" factoryName="Application">
+  <configuration default="false" name="HrWorkerApplication00" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.devsuperior.hrworker.HrWorkerApplication" />
     <module name="hr-worker" />
-    <option name="PROGRAM_PARAMETERS" value="--server.port=8002" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.devsuperior.hrworker.*" />
