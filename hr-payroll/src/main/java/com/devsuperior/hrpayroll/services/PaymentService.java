@@ -2,37 +2,26 @@ package com.devsuperior.hrpayroll.services;
 
 import com.devsuperior.hrpayroll.dto.response.WorkerDTO;
 import com.devsuperior.hrpayroll.entities.Payment;
-import org.springframework.beans.factory.annotation.Value;
+import com.devsuperior.hrpayroll.feign.WorkerFeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class PaymentService {
 
-    private final RestTemplate restTemplate;
-    private final String workerMicroserviceURL;
+    private final WorkerFeignClient workerFeignClient;
 
-    public PaymentService(
-            RestTemplate restTemplate,
-            @Value("${hr-worker.host.url}") String workerMicroserviceURL
-    ) {
-        this.restTemplate = restTemplate;
-        this.workerMicroserviceURL = workerMicroserviceURL;
+    public PaymentService(WorkerFeignClient workerFeignClient) {
+        this.workerFeignClient = workerFeignClient;
     }
 
     public Payment generatePayment(final Long workerId, final Integer days) {
-        final String URL = UriComponentsBuilder
-                .fromHttpUrl(this.workerMicroserviceURL)
-                .pathSegment("workers", workerId.toString())
-                .build()
-                .toString();
-
-        final WorkerDTO restResponse = this.restTemplate.getForObject(URL, WorkerDTO.class);
+        final ResponseEntity<WorkerDTO> responseEntity = this.workerFeignClient.getWorkers(workerId);
+        final WorkerDTO worker = responseEntity.getBody();
 
         return Payment.builder()
-                .name(restResponse.getName())
-                .dailyIncome(restResponse.getDailyIncome())
+                .name(worker.getName())
+                .dailyIncome(worker.getDailyIncome())
                 .days(days)
                 .build();
     }
