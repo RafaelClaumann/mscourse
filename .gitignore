@@ -3,4 +3,9 @@ hr-worker/mvnw
 hr-worker/mvnw.cmd
 hr-worker/.idea
 
+hr-payroll/.mvn
+hr-payroll/mvnw
+hr-payroll/mvnw.cmd
+hr-payroll/.idea
+
 .idea
