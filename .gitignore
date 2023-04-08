@@ -13,4 +13,9 @@ hr-eureka-server/mvnw
 hr-eureka-server/mvnw.cmd
 hr-eureka-server/.idea
 
+hr-api-gateway/.mvn
+hr-api-gateway/mvnw
+hr-api-gateway/mvnw.cmd
+hr-api-gateway/.idea
+
 .idea
