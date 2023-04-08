@@ -1,0 +1,19 @@
+name: Open PR to main
+on:
+  push:
+    branches:
+      - feature/**
+      - feat/**
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "main"
+          pr_title: "Pulling ${{ github.ref_name }} into main"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
