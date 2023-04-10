@@ -18,4 +18,9 @@ hr-api-gateway/mvnw
 hr-api-gateway/mvnw.cmd
 hr-api-gateway/.idea
 
+hr-config-server/.mvn
+hr-config-server/mvnw
+hr-config-server/mvnw.cmd
+hr-config-server/.idea
+
 .idea
