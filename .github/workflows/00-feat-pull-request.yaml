@@ -2,8 +2,8 @@ name: Open PR to main
 on:
   push:
     branches:
-      - feature/**
-      - feat/**
+      - feature**
+      - feat**
 
 jobs:
   create-pull-request:
