@@ -6,13 +6,19 @@ on:
       - feat**
 
 jobs:
-  build-hr-payroll:
+  build-core-microservices:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: print_system_settings
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Print system settings
         run: |
           printf "$(java -version)\n"
           printf "$(mvn -version)\n"
@@ -28,17 +34,6 @@ jobs:
           mvn clean install \
           --threads 2C \
           --file pom.xml
-
-  build-hr-worker:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
-      - name: System settings
-        run: |
-          printf "$(java -version)\n"
-          printf "$(mvn -version)\n"
 
       - name: Build hr-payroll
         run: |
