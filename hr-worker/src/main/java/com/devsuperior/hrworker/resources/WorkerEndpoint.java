@@ -36,7 +36,7 @@ public class WorkerEndpoint {
     }
 
     @GetMapping(value = "/{id_worker}")
-    public ResponseEntity<Worker> getWorkers(@PathVariable("id_worker") Long id) {
+    public ResponseEntity<Worker> findWorker(@PathVariable("id_worker") Long id) {
         LOGGER.info("[{}] - hr-worker serving on port: " + applicationEnvironment.getProperty("local.server.port"), WorkerEndpoint.class.getCanonicalName());
 
         final Optional<Worker> optionalWorker = this.workerRepository.findById(id);
