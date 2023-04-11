@@ -1,0 +1,53 @@
+name: Build Feature Artifacts
+on:
+  push:
+    branches:
+      - feature**
+      - feat**
+
+jobs:
+  build-hr-payroll:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: print_system_settings
+        run: |
+          printf "$(java -version)\n"
+          printf "$(mvn -version)\n"
+
+      - name: Build hr-worker
+        run: |
+          cd hr-worker/
+          
+          printf "building hr-worker artifact!\n"
+          printf "current_dir: $PWD\n"
+          ls -ll
+          
+          mvn clean install \
+          --threads 2C \
+          --file pom.xml
+
+  build-hr-worker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: System settings
+        run: |
+          printf "$(java -version)\n"
+          printf "$(mvn -version)\n"
+
+      - name: Build hr-payroll
+        run: |
+          cd hr-payroll/
+          
+          printf "building hr-payroll artifact!\n"
+          printf "current_dir: $PWD\n"
+          ls -ll
+          
+          mvn clean install \
+          --threads 2C \
+          --file pom.xml          
