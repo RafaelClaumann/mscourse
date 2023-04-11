@@ -47,4 +47,17 @@ jobs:
           mvn clean install \
           --threads 2C \
           --batch-mode \
-          --file pom.xml          
+          --file pom.xml
+
+      - name: Build hr-user
+        run: |
+          cd hr-user/
+          
+          printf "building hr-user artifact!\n"
+          printf "current_dir: $PWD\n"
+          ls -ll
+          
+          mvn clean install \
+          --threads 2C \
+          --batch-mode \
+          --file pom.xml
