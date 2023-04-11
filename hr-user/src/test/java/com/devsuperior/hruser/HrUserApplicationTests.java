@@ -1,9 +1,9 @@
-package com.devsuperior.hrworker;
+package com.devsuperior.hruser;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class HrWorkerApplicationTests {
+class HrUserApplicationTests {
 
     @Test
     void dummyTest() {
