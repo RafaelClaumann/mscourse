@@ -26,7 +26,7 @@ public class PaymentEndpoint {
             @PathVariable("worker_id") Long workerId,
             @PathVariable("worked_days") Integer days
     ) {
-        LOGGER.info("[{}] - hr-payroll receiving request", PaymentEndpoint.class.getCanonicalName());
+        LOGGER.info("hr-payroll receiving request");
         Payment payment = this.paymentService.generatePayment(workerId, days);
         return ResponseEntity.ok(payment);
     }

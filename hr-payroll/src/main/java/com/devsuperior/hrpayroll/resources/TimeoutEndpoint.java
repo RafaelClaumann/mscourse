@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping(value = "/circuit_breaker_timeout")
 public class TimeoutEndpoint {
 
-
     private final TimeoutService timeoutService;
 
     public TimeoutEndpoint(TimeoutService timeoutService) {
