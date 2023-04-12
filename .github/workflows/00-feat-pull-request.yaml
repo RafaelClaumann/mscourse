@@ -6,14 +6,57 @@ on:
       - feat**
 
 jobs:
-  create-pull-request:
+  create-pr:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - name: pull-request
-        uses: repo-sync/pull-request@v2
-        with:
-          destination_branch: "main"
-          pr_title: "Pulling ${{ github.ref_name }} into main"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check pull request existence
+        id: pr_existence
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          
+          PRS=$(
+              gh pr list \
+                --repo $GITHUB_REPOSITORY \
+                --json baseRefName,headRefName \
+                --jq "map(select(.baseRefName == \"main\" and .headRefName == \"$GITHUB_REF_NAME\")) | length"
+          )
+          
+          echo "PRS entre $GITHUB_REF_NAME -> main: $PRS"
+          if [[ $PRS > 0 ]]; then
+              echo "ja existe um PR aberto entre $GITHUB_REF_NAME -> main"
+              echo "PR_EXISTS=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          readonly PR_EXISTS=${{ steps.pr_existence.outputs.PR_EXISTS }}
+          if [[ $PR_EXISTS = true ]]; then
+            echo "ja existe um PR aberto entre $GITHUB_REF_NAME -> main"
+            exit 0
+          fi
+          
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          
+          readonly MAIN=$(gh api repos/$GITHUB_REPOSITORY/branches/main | jq -r .commit.sha)
+          readonly FEATURE=$(gh api repos/$GITHUB_REPOSITORY/branches/$GITHUB_REF_NAME | jq -r .commit.sha)
+          
+          echo "main sha1: $MAIN"
+          echo "$GITHUB_REF_NAME sha1: $FEATURE"
+          
+          if [[ $MAIN != $FEATURE ]]; then
+            gh pr create \
+              --base main \
+              --head $GITHUB_REF_NAME \
+              --title "Merge $GITHUB_REF_NAME into main" \
+              --assignee $GITHUB_REPOSITORY_OWNER \
+              --body "Created by Github action"
+          fi
