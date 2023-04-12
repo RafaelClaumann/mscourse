@@ -23,4 +23,9 @@ hr-user/mvnw
 hr-user/mvnw.cmd
 hr-user/.idea
 
+hr-oauth/.mvn
+hr-oauth/mvnw
+hr-oauth/mvnw.cmd
+hr-oauth/.idea
+
 .idea
