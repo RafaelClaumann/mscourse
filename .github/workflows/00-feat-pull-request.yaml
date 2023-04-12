@@ -9,9 +9,6 @@ jobs:
   create-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
       - name: Check pull request existence
         id: pr_existence
         env:
@@ -59,4 +56,10 @@ jobs:
               --title "Merge $GITHUB_REF_NAME into main" \
               --assignee $GITHUB_REPOSITORY_OWNER \
               --body "Created by Github action"
+          
+              echo
+              echo "create PR: $GITHUB_REF_NAME -> main"
+              gh pr view $GITHUB_REF_NAME \
+                --repo $GITHUB_REPOSITORY \
+                --json title,url,changedFiles,state,createdAt,author,assignees             
           fi
