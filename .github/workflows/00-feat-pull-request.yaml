@@ -6,8 +6,10 @@ on:
       - feat**
 
 jobs:
-  create-pr:
+  CheckPR:
     runs-on: ubuntu-latest
+    outputs:
+      is_pr_present: ${{ steps.pr_existence.outputs.PR_EXISTS }}
     steps:
       - name: Check pull request existence
         id: pr_existence
@@ -24,33 +26,39 @@ jobs:
                 --jq "map(select(.baseRefName == \"main\" and .headRefName == \"$GITHUB_REF_NAME\")) | length"
           )
           
-          echo "PRS entre $GITHUB_REF_NAME -> main: $PRS"
+          echo "Pull Requests: $GITHUB_REF_NAME -> main: $PRS"
+          echo "PR_EXISTS=false" >> "$GITHUB_OUTPUT"
           if [[ $PRS > 0 ]]; then
-              echo "ja existe um PR aberto entre $GITHUB_REF_NAME -> main"
+              echo "there is already one Pull Request: $GITHUB_REF_NAME -> main"
               echo "PR_EXISTS=true" >> "$GITHUB_OUTPUT"
           fi
 
+  CreatePR:
+    needs: CheckPR
+    if: ${{ needs.CheckPR.outputs.is_pr_present == 'false' }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Create pull request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          readonly PR_EXISTS=${{ steps.pr_existence.outputs.PR_EXISTS }}
-          if [[ $PR_EXISTS = true ]]; then
-            echo "ja existe um PR aberto entre $GITHUB_REF_NAME -> main"
-            exit 0
-          fi
+          echo "exists Pull Request? ${{ needs.CheckPR.outputs.is_pr_present }}"
+          echo
           
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          echo
           
-          readonly MAIN=$(gh api repos/$GITHUB_REPOSITORY/branches/main | jq -r .commit.sha)
-          readonly FEATURE=$(gh api repos/$GITHUB_REPOSITORY/branches/$GITHUB_REF_NAME | jq -r .commit.sha)
+          readonly MAIN_BRANCH_SHA1=$(gh api repos/$GITHUB_REPOSITORY/branches/main | jq -r .commit.sha)
+          readonly CURRENT_BRANCH_SHA1=$(gh api repos/$GITHUB_REPOSITORY/branches/$GITHUB_REF_NAME | jq -r .commit.sha)
           
-          echo "main sha1: $MAIN"
-          echo "$GITHUB_REF_NAME sha1: $FEATURE"
+          echo "main branch last commit sha1: $MAIN_BRANCH_SHA1"
+          echo "$GITHUB_REF_NAME last commit sha1: $CURRENT_BRANCH_SHA1"
+          echo
           
-          if [[ $MAIN != $FEATURE ]]; then
+          if [[ $MAIN_BRANCH_SHA1 != $CURRENT_BRANCH_SHA1 ]]; then
             gh pr create \
+              --repo $GITHUB_REPOSITORY \
               --base main \
               --head $GITHUB_REF_NAME \
               --title "Merge $GITHUB_REF_NAME into main" \
@@ -58,7 +66,7 @@ jobs:
               --body "Created by Github action"
           
               echo
-              echo "create PR: $GITHUB_REF_NAME -> main"
+              echo "create Pull Request: $GITHUB_REF_NAME -> main"
               gh pr view $GITHUB_REF_NAME \
                 --repo $GITHUB_REPOSITORY \
                 --json title,url,changedFiles,state,createdAt,author,assignees             
