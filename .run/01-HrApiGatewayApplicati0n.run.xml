@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="HrApiGatewayApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="01-HrApiGatewayApplicati0n" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.devsuperior.hrapigateway.HrApiGatewayApplication" />
     <module name="hr-api-gateway" />
     <extension name="coverage">
