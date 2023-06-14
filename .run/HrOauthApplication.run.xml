@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="HrOauthApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="HrOauthApplication" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.devsuperior.hroauth.HrOauthApplication" />
     <module name="hr-oauth" />
     <extension name="coverage">

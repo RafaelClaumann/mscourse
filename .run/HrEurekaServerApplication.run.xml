@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="HrEurekaServerApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="HrEurekaServerApplication" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.devsuperior.hreurekaserver.HrEurekaServerApplication" />
     <module name="hr-eureka-server" />
     <extension name="coverage">
