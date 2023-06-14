@@ -39,6 +39,7 @@ import java.util.UUID;
 public class AuthorizationConfig {
 
     private static final byte[] JWT_SIGNING_KEY_BYTE_ARRAY = "9faa372517ac1d389758d3750fc07acf00f542277f26fec1ce4593e93f64e338".getBytes();
+    private static final String JWT_CUSTOM_OWNER_AUTHORITIES_CLAIM_KEY = "owner_authorities";
 
     @Bean
     @Order(1)
@@ -72,9 +73,6 @@ public class AuthorizationConfig {
         return AuthorizationServerSettings.builder().build();
     }
 
-    // http://127.0.0.1:8080/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=http://127.0.0.1:8080/authorized
-    // http://127.0.0.1:8080/authorized?code=O39aJ4AdLTO6haJ_O_3jJKYLZWSEvlBZgQUcg-GXbPXfEM6W8AMSYueXOdexKzY5YhR8EFftrRbkQGd69j4kVLzwF43jKOKP5c1NXlXVpO9DcLqzkDZqWyfzD7bC4bHK
-    // http://127.0.0.1:8080/oauth2/token?client_id=client&redirect_uri=http://127.0.0.1:8080/authorized&grant_type=authorization_code&code=rEj519euZEhvZeZL8f9uteOHR2eSXdogu-8IffJFCVm1UnKiusk6LLthiCScxP9GRAbbEFD3dZY6vwglG5w30PsUu2EGt0nkPe63hqcewpW3iR1j-k7gmaO_Ez8Wdhw2
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient registeredClient = RegisteredClient
@@ -85,7 +83,7 @@ public class AuthorizationConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:8080/authorized")
+                .redirectUri("http://127.0.0.1:8765/authorized")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .tokenSettings(TokenSettings.builder().build())
@@ -100,7 +98,7 @@ public class AuthorizationConfig {
     }
 
     @Bean
-    JwtEncoder jwtEncoder() {
+    public JwtEncoder jwtEncoder() {
         return new NimbusJwtEncoder(new ImmutableSecret<>(JWT_SIGNING_KEY_BYTE_ARRAY));
     }
 
@@ -117,7 +115,7 @@ public class AuthorizationConfig {
 
             Collection<? extends GrantedAuthority> authorities = context.getPrincipal().getAuthorities();
             List<String> tokenAuthorities = authorities.stream().map(GrantedAuthority::getAuthority).toList();
-            context.getClaims().claim("owner_authorities", tokenAuthorities);
+            context.getClaims().claim(JWT_CUSTOM_OWNER_AUTHORITIES_CLAIM_KEY, tokenAuthorities);
         };
     }
 

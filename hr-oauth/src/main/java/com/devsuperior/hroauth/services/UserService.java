@@ -26,12 +26,12 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserDTO user = this.userFeignClient.nomeDoMetodoNaoImporta(email).getBody();
+        final UserDTO user = this.userFeignClient.nomeDoMetodoNaoImporta(email).getBody();
 
         if (Objects.isNull(user))
             throw new IllegalArgumentException("usuario não encontrado");
 
-        LOGGER.info("usuario encontrado com email:".concat(email));
+        LOGGER.info("usuario [ {} ] encontrado", user);
         return new SecurityUser(user);
     }
 
